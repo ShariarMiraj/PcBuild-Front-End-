@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en-US">
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+      <script>
+	   var app= angular.module("my-app",[]);
+	   
+	 
+	   
+	   app.controller('OrdersCtrl',function($scope,$http) {
+	   
+	       $http.get("https://localhost:44395/api/orders/1/products").then(function(resp){
+		     debugger;
+		     $scope.order = resp.data;
+		   },
+		   
+		   function(err){
+		   debugger;
+		   });
+	   });
+	  
+      </script>
+	  
+	  <body ng-app="my-app">
+	  <div ng-controller="OrdersCtrl">	
+      
+	  
+	      <li><h2>productsID:{{order.Id}}</h2></li>
+			 <li>{{order.ProductName}}</li>
+			 <li>{{order.ProductCategory}}</li>
+			 <li>{{order.ProductPrice}}</li>
+			 <li>{{order.ProdcutQuantity}}</li>
+			 <li>{{order.SelleingBy}}</li>
+
+			 <li><h2>SellerName:{{order.Sname}}</h2></li>
+			<li>{{order.Password}}</li>
+			<li>{{order.Name}}</li>
+			<li>{{order.Email}}</li>
+			<li>{{order.PhoneNumber}}</li>
+			<li>{{order.NidNumber}}</li>
+			 
+			 
+		    <li><h2>OrderID :{{order.Id}}</h2></li>
+			<li>{{order.OrderDate}}</li>
+			<li>{{order.OrderType}}</li>
+			<li>{{order.OrderQuantity}}</li>
+			<li>{{order.Location}}</li>
+			<li><b>SelleBy:{{order.SelleBy}}</b></li>
+			<li><b>ProductId:{{order.ProductId}}</b></li>
+
+            <li></li>
+            <li></li>
+			
+			
+			
+			 <li></li>
+            <li></li>
+			
+	  
+	 
+			
+			 
+		 </div>
+	  </body>
+</html>

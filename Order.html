@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en-US">
+     <head>
+	       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	  </head>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+      <script>
+	   var app= angular.module("my-app",[]);
+	   
+	   app.controller('OrdersCtrl',function($scope,$http) {
+	   
+	       $http.get("https://localhost:44395/api/orders/11").then(function(resp){
+		   
+		     $scope.order = resp.data;
+		   },
+		   
+		   function(err){
+		   debugger;
+		   });
+	   });
+	  
+      </script>
+	  
+	  <body ng-app="my-app">
+	  <div ng-controller="OrdersCtrl">
+	  <table class="table table-bordered">
+              	  
+				    <tr>
+		    <th>Id</th>
+			<th>OrderDate</th>
+			<th>OrderType</th>
+			<th>OrderQuantity</th>
+			<th>SelleBy</th>
+			<th>ProductId</th>
+		     </tr>
+			 
+		    <th><li><h2>OrderIDNUmber:{{order.Id}}</h2></li></th>
+			<th><li>{{order.OrderDate}}</li></th>
+			<th><li>{{order.OrderType}}</li></th>
+			<th><li>{{order.OrderQuantity}}</li></th>
+			<th><li>{{order.Location}}</li></th>
+			<th><li><b>SelleBy:{{order.SelleBy}}</b></li></th>
+			<th><li><b>ProductId:{{order.ProductId}}</b></li></th>	    				 		   
+		 </div>
+	  </body>
+</html>

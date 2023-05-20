@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="UTF-8">
+  <title>CtttLogin Page</title>
+  <style>
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f2f2f2;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .container input[type="text"],
+    .container input[type="password"] {
+	width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-sizing: border-box;
+      /* add your styles here */
+    }
+	
+	.container button[type="submit"],
+.container button[type="button"] {
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+    /* Add your custom styles here */
+
+    .product-table {
+      margin-top: 20px;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .product-table th,
+    .product-table td {
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    .product-table th {
+      background-color: #f2f2f2;
+    }
+
+  </style>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+
+   <script>
+    var app = angular.module("my-app", []);
+
+    app.factory('interceptor', [function() {
+      var interceptor = {
+        request: function(config) {
+          config.headers.Authorization = localStorage.getItem("tkey");
+          return config;
+        },
+        response: function(response) {
+          return response;
+        }
+      };
+      return interceptor;
+    }]);
+
+    app.config(function($httpProvider) {
+      $httpProvider.interceptors.push('interceptor');
+    });
+
+       
+
+    app.controller('loginCtrl', function($scope, $http) {
+      $scope.login = function() {
+        var v = $scope.l;
+        $http.post("https://localhost:44395/api/Sellr/login", v).then(function(resp) {
+          localStorage.setItem("tkey", resp.data.TKey);
+          // Redirect to another page or perform other actions upon successful login
+        }, function(err) {
+          $scope.loginError = "Invalid credentials. Please try again.";
+        });
+      };
+    });
+
+    app.controller('OrderProductCtrl', function($scope, $http) {
+      $scope.load = function() {
+        $http.get("https://localhost:44395/api/orders/1/products").then(function(resp) {
+          $scope.order = resp.data;
+        }, function(err) {
+          $scope.msg = err.data.Msg;
+        });
+      };
+    });
+  </script>
+
+<body ng-app="my-app">
+  <div class="container" ng-controller="loginCtrl">
+    <h2>Login</h2>
+    <form ng-submit="login()">
+      <input type="text" ng-model="l.Sname" placeholder="Seller" required><br>
+      <input type="password" ng-model="l.Password" placeholder="Password" required><br>
+      <button type="submit">Login</button>
+    </form>
+    <p class="error" ng-if="loginError">{{loginError}}</p>
+  </div>
+
+  <div ng-controller="OrderProductCtrl">
+    <div class="container">
+      <h2>{{msg}}</h2>
+      <button ng-click="load()" ng-disabled="loading">Load</button>
+      <table class="product-table" ng-if="order">
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Product Category</th>
+            <th>Product Quantity</th>
+            <th>Product Price</th>
+            <th>Selling By</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="o in order.Products">
+            <td>{{o.ProductName}}</td>
+            <td>{{o.ProductCategory}}</td>
+            <td>{{o.ProdcutQuantity}}</td>
+            <td>{{o.ProductPrice}}</td>
+            <td>{{o.SelleingBy}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  
+</body>
+</html>
